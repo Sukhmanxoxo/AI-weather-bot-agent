@@ -1,0 +1,178 @@
+{
+  "name": "AI weather bot agent",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -400,
+        -96
+      ],
+      "id": "54ca394a-435e-4b98-8f1a-8c3baedcefc1",
+      "name": "When chat message received",
+      "webhookId": "b082d292-b548-49c1-a985-3bb623bbf679"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -128,
+        -144
+      ],
+      "id": "454bc1ad-3e6e-4c55-ab4f-e490916e4891",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "openai/gpt-4o",
+          "mode": "list",
+          "cachedResultName": "openai/gpt-4o"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -192,
+        48
+      ],
+      "id": "a13f167a-8b66-4a66-90c3-4e8de6345811",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "Y72e7YluXyqN13AX",
+          "name": "OpenAi account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "contextWindowLength": 2
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        -80,
+        112
+      ],
+      "id": "9a62c685-52f5-4038-be87-e2a359233e66",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('To', `ask me for the email.`, 'string') }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', `a fun weather forecast short subject which is appealing an unique.`, 'string') }}",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', `make sure you send a weather forecast but in a fun manner that the user would be loving to open the message.`, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        208,
+        32
+      ],
+      "id": "bf87351c-48e7-42ea-8649-018ce75f081a",
+      "name": "Send a message in Gmail",
+      "webhookId": "8b077d4d-e0fd-401b-ab65-c51f5230eaff",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "FQtg5eD7VVzU60Fi",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "getting weather report",
+        "url": "https://api.open-meteo.com/v1/forecast?latitude=30.3363&longitude=76.3922&hourly=temperature_2m&forecast_days=3&precipitation_unit=inch",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        32,
+        64
+      ],
+      "id": "04217dfa-bfdc-4750-a2a2-0a41185e9ac9",
+      "name": "HTTP Request"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f56180fd-4879-4c48-9a5e-7f713f0fcb51",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a11d4825d359286612136febb7f5b0161c1a279391b09166c3f3d6dbc80781c0"
+  },
+  "id": "41UJwMNhokl8o3T1",
+  "tags": []
+}
